@@ -19,23 +19,9 @@ async function exportFiles(outputFolder) {
 
   try {
     const dirPath = path.resolve(process.cwd(), outputFolder);
+
     progress.start('Searching for Pinata files');
-
-    let files = [];
-    let response;
-    let pageOffset = 0;
-    const pageLimit = 100;
-    do {
-      response = await pinata.pinList({
-        status: 'all',
-        pageLimit,
-        pageOffset,
-      });
-
-      files = [...files, ...response.rows];
-      pageOffset += pageLimit;
-    } while (response.rows.length != 0);
-
+    const files = await getAllPins();
     progress.succeed(`Found ${files.length} files in Pinata account`);
 
     for (let i = 0; i < files.length; i++) {
@@ -63,4 +49,23 @@ async function exportFiles(outputFolder) {
     progress.stop();
     console.log(err);
   }
+}
+
+async function getAllPins() {
+  let files = [];
+  let response;
+  let pageOffset = 0;
+  const pageLimit = 100;
+  do {
+    response = await pinata.pinList({
+      status: 'all',
+      pageLimit,
+      pageOffset,
+    });
+
+    files = [...files, ...response.rows];
+    pageOffset += pageLimit;
+  } while (response.rows.length != 0);
+
+  return files;
 }
