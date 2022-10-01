@@ -1,6 +1,5 @@
 {
   "name": "pinata-export",
-  "version": "1.0.0",
   "description": "Export IPFS files from pinata",
   "type": "module",
   "main": "./src/index.js",
